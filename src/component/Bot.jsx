@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import logo from "../assets/logo.png";
 import { ThreeDots } from 'react-loading';
+import ReactLoading from "react-loading";
 
 import {
   FaTimes,
