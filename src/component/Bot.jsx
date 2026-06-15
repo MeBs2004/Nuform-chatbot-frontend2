@@ -47,7 +47,7 @@ function Bot() {
       try {
 
         const res = await axios.get(
-          "https://nuform-chatbot.onrender.com/bot/v1/suggestions"
+          `${process.env.Frontend_URL}bot/v1/suggestions`
         );
 
         if (res.data.success) {
@@ -87,7 +87,7 @@ function Bot() {
     try {
 
       const res = await axios.post(
-        "https://nuform-chatbot.onrender.com/bot/v1/message",
+        `${process.env.Frontend_URL}bot/v1/message`,
         {
           text: messageText,
           language,
