@@ -329,7 +329,6 @@ if (
   z-50
   border
   border-[#dcdcdc]
-  p-3
   transition-all
   duration-500
   ${
