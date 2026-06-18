@@ -103,30 +103,53 @@ useEffect(() => {
   
   
   // Fetch Suggestions
-  useEffect(() => {
+useEffect(() => {
 
-    const fetchSuggestions = async () => {
+  const fetchSuggestions = async () => {
 
-      try {
+  try {
 
-        const res = await axios.get(
-          `${BACKEND_URL}bot/v1/suggestions`
-        );
+    console.log("BACKEND_URL =", BACKEND_URL);
 
-        if (res.data.success) {
-          setSuggestions(res.data.suggestions);
+    console.log(
+      `${BACKEND_URL}bot/v1/suggestions?language=${language}`
+    );
+
+    const res = await axios.get(
+      `${BACKEND_URL}bot/v1/suggestions`,
+      {
+        params: {
+          language: language
         }
+      }
+    );
 
-      } catch (error) {
+      console.log("Language:", language);
+      console.log("Suggestions:");
+res.data.suggestions.forEach((item, i) =>
+  console.log(i, item)
+);
 
-        console.log("Suggestion Error:", error);
+      if (res.data.success) {
+
+        setSuggestions([]);
+setTimeout(() => {
+  setSuggestions(res.data.suggestions);
+}, 0);
 
       }
-    };
 
-    fetchSuggestions();
+    } catch (error) {
 
-  }, []);
+      console.log("Suggestion Error:", error);
+
+    }
+
+  };
+
+  fetchSuggestions();
+
+}, [language]);
 
   // Send Message
   const handleSendMessage = async (customMessage = null) => {
@@ -506,12 +529,29 @@ if (
                 "
               >
 
-                👋 Hey! I'm the Nuform Social Assistant.
-                Whether you're looking to grow your
-                brand, build a website, or run high-ROI
-                campaigns — I'm here to help.
+                {
+language === "Hindi" ? (
+  <>
+    👋 नमस्ते! मैं Nuform Social Assistant हूँ।
 
-                What brings you here today?
+    चाहे आप अपना ब्रांड बढ़ाना चाहते हों,
+    वेबसाइट बनवाना चाहते हों या उच्च-ROI
+    कैंपेन चलाना चाहते हों — मैं आपकी सहायता के लिए यहाँ हूँ।
+
+    आज आप किस उद्देश्य से आए हैं?
+  </>
+) : (
+  <>
+    👋 Hey! I'm the Nuform Social Assistant.
+
+    Whether you're looking to grow your
+    brand, build a website, or run high-ROI
+    campaigns — I'm here to help.
+
+    What brings you here today?
+  </>
+)
+}
 
               </div>
 
@@ -754,7 +794,9 @@ if (
                 "
               >
 
-                {suggestions.map((item, index) => (
+                {console.log("Rendering suggestions:", suggestions)}
+
+{suggestions.map((item, index) => (
 
                   <button
                     key={index}
