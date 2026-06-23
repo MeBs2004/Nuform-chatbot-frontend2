@@ -151,17 +151,14 @@ setTimeout(() => {
 
 }, [language]);
 
-// Visitor Tracking
 useEffect(() => {
 
   const saveVisitor = async () => {
 
     try {
 
-      // Get visitorId from localStorage
       let visitorId = localStorage.getItem("visitorId");
 
-      // Create visitorId if first visit
       if (!visitorId) {
 
         visitorId = crypto.randomUUID();
@@ -173,25 +170,11 @@ useEffect(() => {
 
       }
 
-      const geo = await axios.get(
-        "https://ipapi.co/json/"
-      );
-
       const response = await axios.post(
         `${BACKEND_URL}bot/v1/visitor`,
         {
 
           visitorId,
-
-          ip: geo.data.ip,
-
-          country: geo.data.country_name,
-
-          region: geo.data.region,
-
-          city: geo.data.city,
-
-          timezone: geo.data.timezone,
 
           browser: navigator.userAgent,
 
