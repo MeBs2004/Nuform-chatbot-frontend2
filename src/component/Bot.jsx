@@ -154,46 +154,71 @@ setTimeout(() => {
 // Visitor Tracking
 useEffect(() => {
 
-  console.log("Visitor tracking started");
-
   const saveVisitor = async () => {
 
     try {
+
+      // Get visitorId from localStorage
+      let visitorId = localStorage.getItem("visitorId");
+
+      // Create visitorId if first visit
+      if (!visitorId) {
+
+        visitorId = crypto.randomUUID();
+
+        localStorage.setItem(
+          "visitorId",
+          visitorId
+        );
+
+      }
 
       const geo = await axios.get(
         "https://ipapi.co/json/"
       );
 
-      console.log("Geo Data:", geo.data);
-
       const response = await axios.post(
         `${BACKEND_URL}bot/v1/visitor`,
         {
+
+          visitorId,
+
           ip: geo.data.ip,
+
           country: geo.data.country_name,
+
           region: geo.data.region,
+
           city: geo.data.city,
+
           timezone: geo.data.timezone,
+
           browser: navigator.userAgent,
+
           os: navigator.platform,
+
           device:
             window.innerWidth < 768
               ? "Mobile"
               : "Desktop",
+
           language: navigator.language,
+
           page: window.location.href,
+
         }
+
       );
 
-      console.log("Visitor Saved:", response.data);
+      console.log(response.data);
 
-    } catch (error) {
+    }
 
-      console.log("Visitor Tracking Error:");
+    catch (error) {
+
+      console.log("Visitor Tracking Error");
 
       console.log(error);
-
-      console.log(error.response);
 
     }
 
@@ -223,6 +248,31 @@ if (
     "nuform_user_email",
     messageText
   );
+
+  try {
+
+  const response = await axios.post(
+    `${BACKEND_URL}bot/v1/visitor/email`,
+    {
+      visitorId: localStorage.getItem("visitorId"),
+      email: messageText,
+    }
+  );
+
+  console.log("EMAIL SAVED SUCCESSFULLY");
+  console.log(response.data);
+
+}
+
+catch (error) {
+
+  console.log("EMAIL SAVE FAILED");
+
+  console.log(error);
+
+  console.log(error.response?.data);
+
+}
 
   setMessages((prev) => [
     ...prev,
@@ -258,12 +308,13 @@ if (
     try {
 
       const res = await axios.post(
-        `${BACKEND_URL}bot/v1/message`,
-        {
-          text: messageText,
-          language,
-        }
-      );
+  `${BACKEND_URL}bot/v1/message`,
+  {
+    text: messageText,
+    language,
+    visitorId: localStorage.getItem("visitorId"),
+  }
+);
 
       if (res.data.success) {
 
