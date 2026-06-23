@@ -154,54 +154,46 @@ setTimeout(() => {
 // Visitor Tracking
 useEffect(() => {
 
+  console.log("Visitor tracking started");
+
   const saveVisitor = async () => {
 
     try {
 
-      // Get location details
       const geo = await axios.get(
         "https://ipapi.co/json/"
       );
 
-      // Send visitor data to backend
-      await axios.post(
+      console.log("Geo Data:", geo.data);
+
+      const response = await axios.post(
         `${BACKEND_URL}bot/v1/visitor`,
         {
-
           ip: geo.data.ip,
-
           country: geo.data.country_name,
-
           region: geo.data.region,
-
           city: geo.data.city,
-
           timezone: geo.data.timezone,
-
           browser: navigator.userAgent,
-
           os: navigator.platform,
-
           device:
             window.innerWidth < 768
               ? "Mobile"
               : "Desktop",
-
           language: navigator.language,
-
           page: window.location.href,
-
         }
       );
 
-      console.log("Visitor Saved Successfully");
+      console.log("Visitor Saved:", response.data);
 
     } catch (error) {
 
-      console.log(
-        "Visitor Tracking Error:",
-        error
-      );
+      console.log("Visitor Tracking Error:");
+
+      console.log(error);
+
+      console.log(error.response);
 
     }
 
@@ -210,7 +202,6 @@ useEffect(() => {
   saveVisitor();
 
 }, []);
-
   // Send Message
   const handleSendMessage = async (customMessage = null) => {
 
